@@ -1,8 +1,12 @@
 package com.qa.products.rest;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.ResultMatcher;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.qa.products.domain.Products;
 
@@ -42,5 +47,31 @@ public class ProductsControllerTest {
 		this.mock.perform(mockRequest).andExpect(matchBody).andExpect(matchStatus);
 	}
 	
+	@Test
+	void testReadById() throws Exception {
+		Long id=1L;
+		RequestBuilder mockRequest=get("/readById/id=?"+id);
+		Optional<Products> read=Optional.of(new Products(1L,"Apple","Fruits",200,1.75));
+		String savedJSON=this.map.writeValueAsString(read);
+		ResultMatcher matchStatus=status().isOk();
+		ResultMatcher matchBody=content().json(savedJSON);
+		this.mock.perform(mockRequest).andExpect(matchBody).andExpect(matchStatus);
+		
+	}
+	
+	@Test
+	void testRealAll() throws Exception {
+		RequestBuilder mockRequest=get("/readAll");
+		
+		Products a1=new Products(1L,"Apple","Fruits",200,1.75);
+		Products a2=new Products(2L,"Grapes","Fruits",200,2.50);
+		List<Products> read=List.of(a1,a2);
+		
+		String savedJSON=this.map.writeValueAsString(read);
+		ResultMatcher matchStatus=status().isOk();
+		ResultMatcher matchBody=content().json(savedJSON);
+		this.mock.perform(mockRequest).andExpect(matchBody).andExpect(matchStatus);
+		
+	}
 
 }

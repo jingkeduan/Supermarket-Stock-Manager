@@ -3,6 +3,7 @@ package com.qa.products.service;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,7 +27,7 @@ public class ProductsServiceDBTest {
 	private ProductsRepo repo;
 	
 	private List<Products> inputList;
-	private List<Products> inputListr;
+	private List<Products> returnList;
 	private Products a1;
 	private Products a2;
 	private Products a1r;
@@ -40,7 +41,7 @@ public class ProductsServiceDBTest {
 		
 		a1r=new Products(1L,"Apple","Fruits",200,1.75);
 		a2r=new Products(2L,"Grapes","Fruits",200,2.50);
-		inputListr=List.of(a1r,a2r);
+		returnList=List.of(a1r,a2r);
 	}
 	
 	@Test
@@ -50,7 +51,20 @@ public class ProductsServiceDBTest {
 		Mockito.verify(this.repo,Mockito.times(1)).save(this.a1);
 	}
 	
+	@Test
+	void testReadById() {
+		final Long id=1L;
+		Mockito.when(this.repo.findById(id)).thenReturn(Optional.of(this.a1r));
+		assertThat(this.service.readById(id)).isEqualTo(this.a1r);
+		Mockito.verify(this.repo,Mockito.times(1)).findById(id);	
+	}
 	
+	@Test
+	void testReadAll() {
+		Mockito.when(this.repo.findAll()).thenReturn(this.returnList);
+		assertThat(this.service.readAll()).isEqualTo(this.returnList);
+		Mockito.verify(this.repo,Mockito.times(1)).findAll();
+	}
 	
 
 }

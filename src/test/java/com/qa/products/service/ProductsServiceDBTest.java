@@ -78,5 +78,27 @@ public class ProductsServiceDBTest {
 		Mockito.verify(this.repo,Mockito.times(1)).save(this.a2);	
 	}
 	
-
+	@Test
+	void testDelete() {
+		final Long id=1L;
+		final boolean deleted=true;
+		
+		Mockito.when(this.repo.findById(id)).thenReturn(a1o);
+		Mockito.when(this.repo.existsById(id)).thenReturn(!deleted);
+		
+		assertThat(this.service.delete(id)).isEqualTo(deleted);
+		Mockito.verify(this.repo,Mockito.times(1)).findById(id);
+		Mockito.verify(this.repo,Mockito.times(1)).deleteById(id);
+	}
+	
+	@Test
+	void testRemove() {
+		final Long id=1L;
+		Mockito.when(this.repo.findById(id)).thenReturn(a1o);
+		
+		assertThat(this.service.delete(id)).isEqualTo(a1r);
+		Mockito.verify(this.repo,Mockito.times(1)).findById(id);
+		Mockito.verify(this.repo,Mockito.times(1)).deleteById(id);
+	}
+	
 }

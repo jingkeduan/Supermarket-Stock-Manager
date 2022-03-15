@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -36,6 +37,11 @@ public class ProductsController{
 	@GetMapping("/readById/{id}")
 	public Products readById(@PathVariable Long id) {
 		return this.service.readById(id);
+	}
+	
+	@PutMapping("/update/{id}")
+	public ResponseEntity<Products> update(@PathVariable Long id, @RequestBody Products a) {
+		return new ResponseEntity<Products>(this.service.update(id,a),HttpStatus.FOUND); 
 	}
 
 }

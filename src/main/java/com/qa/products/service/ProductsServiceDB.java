@@ -1,6 +1,7 @@
 package com.qa.products.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.qa.products.domain.Products;
 import com.qa.products.repo.ProductsRepo;
@@ -27,8 +28,19 @@ public class ProductsServiceDB implements ProductsInterface{
 	
 	@Override
 	public Products update(Long id, Products y) {
-		// TODO Auto-generated method stub
-		return null;
+		Optional<Products>a=this.repo.findById(id);
+		if (a.isPresent()) {
+		Products newItem=new Products();
+		newItem.setCategory(y.getCategory());
+		newItem.setId(id);
+		newItem.setName(y.getName());
+		newItem.setPrice(y.getPrice());
+		newItem.setQuantity(y.getQuantity());
+		return this.repo.save(newItem);
+		}
+		else {
+			return null;
+		}
 	}
 
 	@Override

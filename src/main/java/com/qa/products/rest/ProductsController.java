@@ -2,8 +2,11 @@ package com.qa.products.rest;
 
 import java.util.List;
 
+import javax.websocket.server.PathParam;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -42,6 +45,16 @@ public class ProductsController{
 	@PutMapping("/update/{id}")
 	public ResponseEntity<Products> update(@PathVariable Long id, @RequestBody Products a) {
 		return new ResponseEntity<Products>(this.service.update(id,a),HttpStatus.FOUND); 
+	}
+	
+	@DeleteMapping("/delete")
+	public ResponseEntity<Boolean> delete(@PathParam("id") Long id){
+		return new ResponseEntity<Boolean>(this.service.delete(id),HttpStatus.NO_CONTENT);
+	}
+	
+	@DeleteMapping("/remove")
+	public ResponseEntity<Products> remove(@PathParam("id") Long id) {
+		return new ResponseEntity<Products>(this.service.remove(id),HttpStatus.ACCEPTED);
 	}
 
 }

@@ -14,7 +14,7 @@ public interface ProductsInterface{
 	
 	Products update(Long id, Products y);
 	
-	boolean delete(Long id);
+	Boolean delete(Long id);
 	
 	Products remove(Long id);
 

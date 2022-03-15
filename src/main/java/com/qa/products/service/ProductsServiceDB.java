@@ -6,14 +6,14 @@ import java.util.Optional;
 import com.qa.products.domain.Products;
 import com.qa.products.repo.ProductsRepo;
 
-public class ProductsServiceDB implements ProductsInterface{
+public class ProductsServiceDB implements ProductsInterface {
 
 	private ProductsRepo repo;
-	
+
 	@Override
 	public Products create(Products x) {
 		return this.repo.save(x);
-		
+
 	}
 
 	@Override
@@ -25,36 +25,40 @@ public class ProductsServiceDB implements ProductsInterface{
 	public Products readById(Long id) {
 		return this.repo.findById(id).orElse(null);
 	}
-	
+
 	@Override
 	public Products update(Long id, Products y) {
-		Optional<Products>a=this.repo.findById(id);
-		if (a.isPresent()) {
-		Products newItem=new Products();
+		Optional<Products> a = this.repo.findById(id);
+		Products newItem = a.get();
 		newItem.setCategory(y.getCategory());
 		newItem.setId(id);
 		newItem.setName(y.getName());
 		newItem.setPrice(y.getPrice());
 		newItem.setQuantity(y.getQuantity());
 		return this.repo.save(newItem);
-		}
-		else {
-			return null;
-		}
+
 	}
 
 	@Override
-	public boolean delete(Long id) {
-		// TODO Auto-generated method stub
-		return false;
+	public Boolean delete(Long id) {
+		Optional<Products> toDelete = this.repo.findById(id);
+		if (toDelete.isPresent()) {
+			this.repo.deleteById(id);
+			if (!this.repo.existsById(id)) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+		return true; //to indicate possibility of an object already been deleted before this operation
+
 	}
 
 	@Override
 	public Products remove(Long id) {
-		// TODO Auto-generated method stub
-		return null;
+		Optional<Products> toDelete = this.repo.findById(id);
+		this.repo.deleteById(id);
+		return toDelete.orElse(null);
 	}
-
-
 
 }

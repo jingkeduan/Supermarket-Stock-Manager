@@ -1,5 +1,6 @@
 package com.qa.products.rest;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -51,7 +52,7 @@ public class ProductsControllerTest {
 	@Test
 	void testReadById() throws Exception {
 		Long id=1L;
-		RequestBuilder mockRequest=get("/readById/id=?"+id);
+		RequestBuilder mockRequest=get("/readById/?id="+id);
 		Optional<Products> read=Optional.of(new Products(1L,"Apple","Fruits",200,1.75));
 		String savedJSON=this.map.writeValueAsString(read);
 		ResultMatcher matchStatus=status().isOk();
@@ -81,11 +82,33 @@ public class ProductsControllerTest {
 		Products update=new Products("Watermelon","Fruits",50,3.50);
 		String updateJSON=this.map.writeValueAsString(update);
 		
-		RequestBuilder mockRequest=put("/update/id=?"+id).contentType(MediaType.APPLICATION_JSON).content(updateJSON);
+		RequestBuilder mockRequest=put("/update/?id="+id).contentType(MediaType.APPLICATION_JSON).content(updateJSON);
 		Products saved=new Products(2L,"Watermelon","Fruits",50,3.50);
 		String savedJSON=this.map.writeValueAsString(saved);
 		ResultMatcher matchStatus=status().isFound();
 		ResultMatcher matchBody=content().json(savedJSON);
+		this.mock.perform(mockRequest).andExpect(matchBody).andExpect(matchStatus);
+	}
+	
+	@Test
+	void testDelete() throws Exception{
+		Long id=1L;
+		RequestBuilder mockRequest=delete("/delete/?id="+id);
+		ResultMatcher matchStatus=status().isNoContent();
+		ResultMatcher matchBody=content().string("true");
+		this.mock.perform(mockRequest).andExpect(matchBody).andExpect(matchStatus);
+	}
+	
+	@Test
+	void testRemove() throws Exception{
+		Long id=1L;
+		
+		RequestBuilder mockRequest=delete("/delete/?=id"+id);
+		
+		Products removed=new Products(1L,"Apple","Fruits",200,1.75);
+		String removedJSON=this.map.writeValueAsString(removed);
+		ResultMatcher matchStatus=status().isAccepted();
+		ResultMatcher matchBody=content().json(removedJSON);
 		this.mock.perform(mockRequest).andExpect(matchBody).andExpect(matchStatus);
 	}
 

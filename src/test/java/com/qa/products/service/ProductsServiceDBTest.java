@@ -32,6 +32,7 @@ public class ProductsServiceDBTest {
 	private Products a2;
 	private Products a1r;
 	private Products a2r;
+	Optional<Products>a1o;
 	
 	@BeforeEach
 	void setUp() {
@@ -42,6 +43,8 @@ public class ProductsServiceDBTest {
 		a1r=new Products(1L,"Apple","Fruits",200,1.75);
 		a2r=new Products(2L,"Grapes","Fruits",200,2.50);
 		returnList=List.of(a1r,a2r);
+		
+		a1o=Optional.of(a1r);
 	}
 	
 	@Test
@@ -64,6 +67,15 @@ public class ProductsServiceDBTest {
 		Mockito.when(this.repo.findAll()).thenReturn(this.returnList);
 		assertThat(this.service.readAll()).isEqualTo(this.returnList);
 		Mockito.verify(this.repo,Mockito.times(1)).findAll();
+	}
+	
+	@Test
+	void testUpdate() {
+		final Long id=1L;
+		Mockito.when(this.repo.findById(id)).thenReturn(a1o);
+		Mockito.when(this.repo.save(this.a2)).thenReturn(this.a2r);
+		assertThat(this.service.update(id,this.a2)).isEqualTo(this.a2r);
+		Mockito.verify(this.repo,Mockito.times(1)).save(this.a2);	
 	}
 	
 

@@ -2,6 +2,7 @@ package com.qa.products.rest;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -72,6 +73,20 @@ public class ProductsControllerTest {
 		ResultMatcher matchBody=content().json(savedJSON);
 		this.mock.perform(mockRequest).andExpect(matchBody).andExpect(matchStatus);
 		
+	}
+	
+	@Test
+	void testUpdate() throws Exception {
+		Long id=2L;
+		Products update=new Products("Watermelon","Fruits",50,3.50);
+		String updateJSON=this.map.writeValueAsString(update);
+		
+		RequestBuilder mockRequest=put("/update/id=?"+id).contentType(MediaType.APPLICATION_JSON).content(updateJSON);
+		Products saved=new Products(2L,"Watermelon","Fruits",50,3.50);
+		String savedJSON=this.map.writeValueAsString(saved);
+		ResultMatcher matchStatus=status().isFound();
+		ResultMatcher matchBody=content().json(savedJSON);
+		this.mock.perform(mockRequest).andExpect(matchBody).andExpect(matchStatus);
 	}
 
 }

@@ -17,14 +17,12 @@ public class ProductsServiceDB implements ProductsInterface{
 
 	@Override
 	public List<Products> readAll() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.repo.findAll();
 	}
 
 	@Override
 	public Products readById(Long id) {
-		// TODO Auto-generated method stub
-		return null;
+		return this.repo.findById(id).orElse(null);
 	}
 	
 	@Override
